@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 import seaborn as sb
 
-env = gym.make('CartPole-v0')
+env = gym.make('CartPole-v1')
 #plt.style.use('bmh')
 sb.set_style('darkgrid')
 
