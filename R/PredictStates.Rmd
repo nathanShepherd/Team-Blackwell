@@ -1,0 +1,33 @@
+---
+title: "Predict States"
+author: "Nathan Shepherd"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+```{r}
+rand_state_acts <- read_csv("../utils/rand_state_acts.csv")[2:13]
+names(rand_state_acts)
+```
+
+```{r}
+hist(rand_state_acts$act)
+#pairs(rand_state_acts[5:12])
+```
+
+```{r}
+states = rand_state_acts[5:12]
+states = round(states, 1)
+states$act = rand_state_acts$act
+hist(states$obs_ax0)
+
+right_acts = filter(states, act==1)
+hist(right_acts$obs_ax0)
+#pairs(states)
+```
+

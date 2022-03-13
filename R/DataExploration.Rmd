@@ -1,0 +1,30 @@
+---
+title: "Data Exploration"
+author: "Nathan Shepherd"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+---
+
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+```
+```{r}
+random_ep_observation_rewards <- read_csv("../utils/random_ep_observation_rewards.csv",show_col_types = FALSE)
+names(random_ep_observation_rewards)
+rand_dat = random_ep_observation_rewards[2:8] # drop index column
+```
+
+```{r}
+summary(rand_dat)
+pairs(rand_dat[4:7])
+```
+
+```{r}
+by_timestep = rand_dat %>% group_by(timestep)
+timestep_summ = summarize(by_timestep, count=n(), avg.reward=mean(reward))
+ggplot(timestep_summ, aes(x=timestep, y=count)) + geom_point()
+```
+
