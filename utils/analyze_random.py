@@ -1,9 +1,10 @@
 import gym
 import numpy as np
 import pandas as pd
+import seaborn as sb
+from sys import argv
 import matplotlib.pyplot as plt
 
-import seaborn as sb
 
 env = gym.make('CartPole-v1')
 #plt.style.use('bmh')
@@ -134,10 +135,24 @@ def plot_observation_reward(filename):
     seaborn_heatmap(df, xyz=('timestep', 'obs_ax2', 'reward'))
     seaborn_heatmap(df, xyz=('timestep', 'obs_ax3', 'reward'))
     
-    
+def handle_cmdline():
+    if len(argv) > 1:
+        if argv[1] == "viz":
+            # Visualize 50 episodes of random actions
+            episodes(10, True)
+
+        if argv[1] == "plot":
+            # Plot 1000 obs and rewards as 4 heatmaps
+            plot_csv = "plot_data.csv"
+            save_observations(plot_csv)
+            plot_observation_reward(plot_csv)
+
 if __name__ == "__main__":
+    handle_cmdline()
+    
     filename = "random_ep_observation_rewards.csv"
-    save_observations(filename)
-    plot_observation_reward(filename)
+    #save_observations(filename, epochs=100)
+    #plot_observation_reward(filename)
+    #episodes(1000, True)
     
     #plt.show()
