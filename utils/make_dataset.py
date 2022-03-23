@@ -36,7 +36,7 @@ def episodes(epochs, viz=False):
         
     return {'obs':frames, 'act':actions, 'next_obs':next_frames, 'reward':rewards}
 
-def save_observations(filename, epochs=1000):
+def save_observations(filename, epochs=100):
     ''' Exec num epochs episodes taking random actions 
         Save info about simulation as .csv
     '''
@@ -71,7 +71,7 @@ def save_observations(filename, epochs=1000):
     
 
     df = pd.concat(df_arr)
-    df.to_csv(filename)
+    df.to_csv(filename, index=False)
 
 if __name__ == "__main__":
-    save_observations('rand_state_acts.csv')
+    save_observations('rand_state_acts.csv', epochs=50)
