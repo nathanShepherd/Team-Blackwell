@@ -50,3 +50,9 @@ To visualize the simulation while it is running (taking random actions) use the 
 The observation axes can also be examined for random episodes as a heatmap of total reward per timestep. Every frame of the simulation is a reward of 1, for a max of 200 frames.
 
     python3 utils/analyze_random.py plot
+
+## Make a Dataset for Analysis
+
+Runs the simulation for a number of episodes (default 50). Exports the observation data as a file (default `rand_state_acts.csv`)
+
+    python3 utils/make_dataset.py
