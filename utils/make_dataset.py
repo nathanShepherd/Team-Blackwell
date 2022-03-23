@@ -73,5 +73,13 @@ def save_observations(filename, epochs=100):
     df = pd.concat(df_arr)
     df.to_csv(filename, index=False)
 
+'''
+observation                 Min         Max
+  0	Cart Position             -4.8            4.8
+  1	Cart Velocity             -Inf            Inf
+  2	Pole Angle                 -24           24
+  3	Pole Velocity At Tip      -Inf            Inf
+'''
+
 if __name__ == "__main__":
     save_observations('rand_state_acts.csv', epochs=50)
