@@ -6,21 +6,30 @@ Our first goal is to predict the future roll-out of states in the OpenAI Gym Car
 
 ## Directory Information
 
-### /R
+#### /R
 
 Analysis of states in Cartpole in order to gain insight about distribution parameters.
 
-### /Utils
+#### /Utils
 
-Utility programs that simplify the process of accessing a Cartpole environment and plotting data. Includes `make_dataset.py` that creates a `.csv` file of random actions with their respective observations for `n` episodes.
+Utility programs that simplify the process of accessing a Cartpole environment and plotting data. Includes:
 
-### /LegacyMarkovAgent
+-   `make_dataset.py` -- creates a `.csv` file of random actions with their respective observations for `n` episodes.
 
-Assorted programs from an old (poorly executed) experiment. Used for training an Agent using a sampling of the conditional state space in Cartpole via the Viterbi Algorithm. Also included are codes to evaluate performance and produce graphics. - evaluate_mm.py - markov_agent.py - markov_chain_recent.py - performance_markov_agent.png
+-   `analyze_random.py` -- allows user to observe how the simulation looks when random actions are taken. Can also be used to create a heatmap of what the ML Agent will see.
+
+#### /LegacyMarkovAgent
+
+Assorted programs from an old (poorly executed) experiment. Used for training an Agent using a sampling of the conditional state space in Cartpole via the Viterbi Algorithm. Also included are codes to evaluate performance and produce graphics.
+
+-   evaluate_mm.py
+-   markov_agent.py
+-   markov_chain_recent.py
+-   performance_markov_agent.png
 
 ## Installing Gym
 
-Use the following to install requirements in a virtual environment at the terminal (python3.6 or greater). 
+Use the following to install requirements in a virtual environment at the terminal (python3.6 or greater).
 
 ``` bash
 virtualenv venv && source venv/bin/activate && pip install -r requirements.txt
@@ -33,3 +42,11 @@ source venv/bin/activate
 ```
 
 ## Executing the Simulation
+
+To visualize the simulation while it is running (taking random actions) use the following code. (Note that if the position of the poll is too far then the simulation ends and resets.)
+
+    python3 utils/analyze_random.py viz
+
+The observation axes can also be examined for random episodes as a heatmap of total reward per timestep. Every frame of the simulation is a reward of 1, for a max of 200 frames.
+
+    python3 utils/analyze_random.py plot
