@@ -11,7 +11,7 @@ library(dplyr)
 library(ggplot2)
 ```
 ```{r}
-rand_state_acts <- read_csv("../utils/rand_state_acts.csv")[2:13]
+rand_state_acts <- read_csv("../utils/rand_state_acts.csv")
 names(rand_state_acts)
 ```
 

@@ -12,14 +12,13 @@ library(dplyr)
 library(ggplot2)
 ```
 ```{r}
-random_ep_observation_rewards <- read_csv("../utils/random_ep_observation_rewards.csv",show_col_types = FALSE)
-names(random_ep_observation_rewards)
-rand_dat = random_ep_observation_rewards[2:8] # drop index column
+rand_dat <- read_csv("../utils/rand_state_acts.csv",show_col_types = FALSE)
+names(rand_dat)
 ```
 
 ```{r}
 summary(rand_dat)
-pairs(rand_dat[4:7])
+pairs(rand_dat[5:12])
 ```
 
 ```{r}
