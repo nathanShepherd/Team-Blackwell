@@ -23,26 +23,18 @@ summary(rand_state_acts$act)
 ```
 
 ```{r}
-states = rand_state_acts[5:12]
-states = round(states, 1)
-states$act = rand_state_acts$act
-hist(states$obs_ax0)
-
-right_acts = filter(states, act==1)
-#hist(right_acts$obs_ax0)
-#pairs(states)
-```
-
-```{r}
 ggplot(rand_state_acts, aes(x=timestep, y=obs_ax0)) +
   geom_point(aes(colour=episode))
 
-ggplot(filter(rand_state_acts, 16 <episode & episode < 25),
+ggplot(filter(rand_state_acts, reward>mean(reward)),
   aes(x=timestep, y=obs_ax0, colour=episode, shape=factor(act))) +
   geom_point()
 
-ggplot(filter(rand_state_acts, episode<10),
-  aes(x=timestep, y=obs_ax0, colour=act, shape=factor(episode))) +
+ggplot(filter(rand_state_acts, 
+              reward>mean(reward) & episode>35),
+  aes(x=timestep, y=obs_ax0,
+      shape=factor(episode),
+      colour=factor(act))) +
   geom_point()
 #binaxis = "x", binwidth = .01
 ```
