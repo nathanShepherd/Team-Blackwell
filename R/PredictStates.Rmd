@@ -10,13 +10,15 @@ library(readr)
 library(dplyr)
 library(ggplot2)
 ```
+
 ```{r}
 rand_state_acts <- read_csv("../utils/rand_state_acts.csv")
 names(rand_state_acts)
 ```
 
 ```{r}
-hist(rand_state_acts$act)
+# Roughly 50% of actions should be left
+summary(rand_state_acts$act)
 #pairs(rand_state_acts[5:12])
 ```
 
@@ -27,7 +29,38 @@ states$act = rand_state_acts$act
 hist(states$obs_ax0)
 
 right_acts = filter(states, act==1)
-hist(right_acts$obs_ax0)
+#hist(right_acts$obs_ax0)
 #pairs(states)
 ```
 
+```{r}
+ggplot(rand_state_acts, aes(x=timestep, y=obs_ax0)) +
+  geom_point(aes(colour=episode))
+
+ggplot(filter(rand_state_acts, 16 <episode & episode < 25),
+  aes(x=timestep, y=obs_ax0, colour=episode, shape=factor(act))) +
+  geom_point()
+
+ggplot(filter(rand_state_acts, episode<10),
+  aes(x=timestep, y=obs_ax0, colour=act, shape=factor(episode))) +
+  geom_point()
+#binaxis = "x", binwidth = .01
+```
+
+```{r}
+ax0_pred = lm(obs_ax0 ~ next_ax0 + factor(act), data=rand_state_acts)
+summary(ax0_pred) 
+
+ax1_pred = lm(obs_ax1 ~ next_ax1 + factor(act), data=rand_state_acts)
+summary(ax1_pred) # Act is a significant predictor here
+
+ax2_pred = lm(obs_ax2 ~ next_ax2 + factor(act), data=rand_state_acts)
+summary(ax2_pred)
+
+ax3_pred = lm(obs_ax3 ~ next_ax3 + factor(act), data=rand_state_acts)
+summary(ax3_pred) # Act is a significant predictor here
+```
+
+```{r}
+plot(rand_state_acts$episode, rand_state_acts$timestep)
+```
