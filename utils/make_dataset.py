@@ -5,7 +5,7 @@ import pandas as pd
 env = gym.make('CartPole-v1')
 
 def play_random(viz=True):
-    obs = [env.reset()]
+    obs = [env.reset(seed=451)]
     next_obs = []
     actions = []
     total_reward = 0
@@ -13,16 +13,16 @@ def play_random(viz=True):
 
     while not terminal:
         if viz: env.render()
-        action = env.action_space.sample()
-        observation, reward, terminal, info = env.step(action)
-        actions.append(action)
+        act = env.action_space.sample()
+        observation, reward, terminal, info = env.step(act)
+        actions.append(act)
         obs.append(observation)
         next_obs.append(observation)
 
         total_reward += reward
 
     # Ignore last obs since next_obs will be null        
-    return obs[:-1], next_obs, action, total_reward
+    return obs[:-1], next_obs, actions, total_reward
 
 def episodes(epochs, viz=False):
 
