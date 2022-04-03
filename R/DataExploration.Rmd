@@ -10,6 +10,7 @@ output:
 library(readr)
 library(dplyr)
 library(ggplot2)
+library(FactoMineR) # PCA
 ```
 
 ```{r}
@@ -86,11 +87,14 @@ data_factor = data.frame(as.matrix(mydata) %*% matrix(fit$loadings))
 names(data_factor) = c("fact")
 ggplot(data_factor, aes(fact)) + geom_density()
 ```
-
 ```{r}
 # PCA Variable Factor Map
 # NOTE: scaling has no effect on fit
-library(FactoMineR)
+data_factor$act = states$act
+res <- PCA(data_factor)
+```
+
+```{r}
 result <- PCA(mydata) # graphs generated automatically
 ```
 
