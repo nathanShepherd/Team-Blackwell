@@ -55,6 +55,37 @@ print(fit, digits=2, cutoff=.3, sort=TRUE)
 #plot(load,type="n") # set up plot
 #text(load,labels=names(mydata),cex=.7) # add variable names
 ```
+```{r}
+# fraction of the variable’s total variance explained by the factor
+apply(fit$loadings^2, 1, sum)
+```
+```{r}
+Lambda <- fit$loadings
+Psi <- diag(fit$uniquenesses)
+S <- fit$correlation
+Sigma <- Lambda %*% t(Lambda) + Psi
+# residual matrix. Numbers close to 0 indicate that our factor model is a good representation of the underlying concept.
+round(S - Sigma, 6)
+```
+```{r}
+reg_fit <- factanal(mydata, factors = 1, scores = "regression")
+mean(reg_fit$scores)
+sd(reg_fit$scores)
+```
+```{r}
+reg_fit$loadings
+```
+```{r}
+ggplot(states, aes(obs_ax0)) + geom_density()
+ggplot(states, aes(obs_ax1)) + geom_density()
+ggplot(states, aes(obs_ax2)) + geom_density()
+ggplot(states, aes(obs_ax3)) + geom_density()
+```
+```{r}
+data_factor = data.frame(as.matrix(mydata) %*% matrix(fit$loadings))
+names(data_factor) = c("fact")
+ggplot(data_factor, aes(fact)) + geom_density()
+```
 
 ```{r}
 # PCA Variable Factor Map

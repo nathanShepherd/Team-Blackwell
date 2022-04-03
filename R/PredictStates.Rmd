@@ -41,18 +41,26 @@ ggplot(filter(rand_state_acts,
 
 ```{r}
 ax0_pred = lm(obs_ax0 ~ next_ax0 + factor(act), data=rand_state_acts)
-summary(ax0_pred) 
+#summary(ax0_pred) 
 
 ax1_pred = lm(obs_ax1 ~ next_ax1 + factor(act), data=rand_state_acts)
 summary(ax1_pred) # Act is a significant predictor here
 
 ax2_pred = lm(obs_ax2 ~ next_ax2 + factor(act), data=rand_state_acts)
-summary(ax2_pred)
+#summary(ax2_pred)
 
 ax3_pred = lm(obs_ax3 ~ next_ax3 + factor(act), data=rand_state_acts)
 summary(ax3_pred) # Act is a significant predictor here
 ```
 
 ```{r}
-plot(rand_state_acts$episode, rand_state_acts$timestep)
+states = data.frame(ax0=rand_state_acts$obs_ax0,
+                    ax1=rand_state_acts$obs_ax1,
+                    ax2=rand_state_acts$obs_ax2,
+                    ax3=rand_state_acts$obs_ax3)
+s_next = data.frame(ax0=rand_state_acts$next_ax0,
+                    ax1=rand_state_acts$next_ax1,
+                    ax2=rand_state_acts$next_ax2,
+                    ax3=rand_state_acts$next_ax3)
+  
 ```
