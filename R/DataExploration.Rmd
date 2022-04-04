@@ -86,6 +86,7 @@ ggplot(states, aes(obs_ax3)) + geom_density()
 data_factor = data.frame(as.matrix(mydata) %*% matrix(fit$loadings))
 names(data_factor) = c("fact")
 ggplot(data_factor, aes(fact)) + geom_density()
+summary(data_factor$fact)
 ```
 ```{r}
 # PCA Variable Factor Map

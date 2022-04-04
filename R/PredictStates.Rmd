@@ -62,5 +62,13 @@ s_next = data.frame(ax0=rand_state_acts$next_ax0,
                     ax1=rand_state_acts$next_ax1,
                     ax2=rand_state_acts$next_ax2,
                     ax3=rand_state_acts$next_ax3)
-  
+fit <- factanal(states, 1, rotation="varimax")
+states_factor = as.matrix(states) %*% matrix(fit$loadings)
+s_next_factor = as.matrix(s_next) %*% matrix(fit$loadings)
+factor_predict = lm(s_next_factor ~ states_factor + factor(rand_state_acts$act))
+summary(factor_predict)
 ```
+```{r}
+fit$loadings
+```
+
