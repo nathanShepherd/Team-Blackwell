@@ -1,6 +1,8 @@
+from re import T
 import gym
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 env = gym.make('CartPole-v1')
 
@@ -26,7 +28,7 @@ class LinearBayesAgent:
         self.Q = self.init_Q() # Matrix of state-value pairs by action
         self.lr = 0.1 # Learning Rate
         self.gamma = 0.9 # Discount factor for future reward
-        self.epsilon = 0.9 # Epsilon Greedy parameter (annealing)
+        self.epsilon = 0.7 # Epsilon Greedy parameter (annealing)
         
 
     def play_episode(self, train=True, viz=False):
@@ -47,10 +49,14 @@ class LinearBayesAgent:
             total_reward += reward
 
             if terminal:
+                # Attenuate random action prob
+                #self.epsilon *= 0.9
                 # Set Q-Value for terminal state as total reward
-                _, Q_idx = self.get_Q(obs[-1], act)
-                self.Q[Q_idx][act] = total_reward
+                #_, Q_idx = self.get_Q(obs[-1], act)
+                #self.Q[Q_idx][act] = total_reward
+                pass
 
+        obs = np.dot(obs, self.loadings)
         return obs, total_reward, actions
     
     def init_bucket(self, rng, num_bins):
@@ -92,9 +98,36 @@ class LinearBayesAgent:
         value_next = np.max(self.Q[Q_idx])
         # Update state_value using bellman equation
         state_value += self.lr*(reward + (self.gamma * value_next) - state_value)
+
+def run_sim(agent, episodes=100, train=True, plot=False):
+    data = {"obs":[], "reward":[],"actions":[]}
+    for ep in range(episodes):
+        obs, reward, actions = agent.play_episode(train=train)
+        data["actions"].append(actions)
+        data["reward"].append(reward)
+        data["obs"].append(obs)
+        if ep % episodes//10 == 0:
+            print(reward)
     
+    if plot:
+        df = pd.DataFrame(data)
+        df.plot()
+        plt.title(f"Training={train}")
+        plt.show()
+
+        
+    
+
 if __name__ == "__main__":
     agent = LinearBayesAgent()
     #import pdb; pdb.set_trace()
-    agent.play_episode()
+    run_sim(agent, episodes=10000, plot=True)
+    df = pd.DataFrame(agent.Q)
+    #import pdb; pdb.set_trace()
+    df.to_csv("Q_table.csv", index=False)
+    #plt.scatter(np.arange(100), df.values[0])
+    #plt.scatter(np.arange(100), df.values[1])
+    #plt.show()
+    run_sim(agent, episodes=100, train=False)
+    
 
