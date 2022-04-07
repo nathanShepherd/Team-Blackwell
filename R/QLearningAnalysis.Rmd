@@ -1,0 +1,30 @@
+---
+title: "QLearningAnalysis"
+author: "Nathan Shepherd"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+library(readr)
+library(ggplot2)
+```
+
+```{r}
+Q_table <- read_csv("../../../Q_table.csv")
+#View(Q_table)
+```
+```{r}
+summary(Q_table)
+```
+
+```{r}
+#plot(Q_table$...1, Q_table$`0`)
+#plot(Q_table$...1, Q_table$`1`)
+ggplot(Q_table, aes(x=Q_table$...1)) + 
+  geom_point(aes(y=Q_table$`0`, colour="act 0")) +
+  geom_point(aes(y=Q_table$`1`, colour="act 1"))
+hist(Q_table$"0", xlim = c(0,200))
+hist(Q_table$"1", xlim = c(0,200))
+```
+
