@@ -20,6 +20,10 @@ binqStats = read_csv("../../../StringQ_rngBins_stats.csv")
 #View(qStats)
 ```
 ```{r}
+summary(binqStats)
+```
+
+```{r}
 summary(binQ_table)
 sd(binQ_table$act0)
 sd(binQ_table$act1)
