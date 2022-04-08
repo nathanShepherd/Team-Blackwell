@@ -15,12 +15,14 @@ gym.envs.register(
 env = gym.make('CartPoleExtraLong-v0')
 #env = gym.make('CartPole-v0')
 observe_training = False
+TARGET_REWARD = 200
 EPSILON_MIN = 0.1
-NUM_BINS = 10
-ALPHA = 0.01
+NUM_BINS = 10 # 10
+ALPHA = 0.01 # 0.01
 GAMMA = 0.9
 '''
     TODO: Fix the Q matrix s.t. it creates the necissary bins
+          Record the number of times each state is updated
 '''
 
 EPOCHS = 2000
@@ -34,29 +36,39 @@ class DQN:
         self.obs_space = obs_space
         
         self.bins = self.get_bins(num_bins)
-        self.init_Q_matrix(observation)
+        #self.init_Q_matrix(observation)
+        self.Q = {}
+        self.digitize(observation)
 
     def get_bins(self, num_bins):
         # Make 10 x state_depth matrix,  each column elem is range/10
         # Digitize using bins ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        # obs[0]--> max: 0.265506 | min: -0.149958 | std: 0.151244
-        #           |   median :-0.0000219
-        # obs[1]--> max: 0.045574 | min: -0.036371 | std: 0.032354
-        #           |   median : 0.16127
-        # obs[2]--> max: 0.241036 | min: -0.336625 | std: 0.205835
-        #           |   median :-0.1940 
-        
+        # obs[0]--> min: -0.11 | max: 0.51 | median : 0.00
+        # obs[1]--> min: -1.41 | max: 1.88 | median : 0.16
+        # obs[2]--> min: -0.21 | max: 0.21 | median :-0.04
+        # obs[3]--> min: -2.66 | max: 2.29 | median :-0.19
+
         bins = []
         ranges = [4.8, 5, 0.418, 5]
+        #ranges = [[-0.11,0.51], [-1.41,1.88],[-0.21, .21], [-2.66,2.29]]
+        
         for i in range(self.obs_space):
-            # use minimum value to anchor buckets
             start, stop = -ranges[i], ranges[i]
+
+            # Using Max and Min values observed in random episodes
+            #start, stop = ranges[i][0], ranges[i][1]
             buckets = np.linspace(start, stop, num_bins)
             bins.append(buckets)
     
         return bins
+    
+    def add_Q_state(self, obs_string):
+        if obs_string not in self.Q:
+            #self.Q[obs_string] = np.random.normal(0,0.001,(2))
+            self.Q[obs_string] = np.zeros((2))
 
     def init_Q_matrix(self, obs):
+        ''' DEPRECIATED '''
         assert(len(obs)==self.obs_space)
         states = []
         for i in range(10**(self.obs_space)):
@@ -66,22 +78,21 @@ class DQN:
         self.Q = {}
         for state in states:
             self.Q[state] = np.zeros((2))
-            
-    
+
     def digitize(self, arr):
         # distribute each elem in state to the index of the closest bin
         state = np.zeros(len(self.bins))
         for i in range(len(self.bins)):
             state[i] = np.digitize(arr[i], self.bins[i])
+        state = ''.join(str(int(elem)) for elem in state)
+        self.add_Q_state(state)
         return state
     
     def get_action(self, state):
-        string_state = ''.join(str(int(elem)) for elem in self.digitize(state))
-        return np.argmax(self.Q[string_state])
+        return np.argmax(self.Q[self.digitize(state)])
 
     def evaluate_utility(self, state):
-        string_state = ''.join(str(int(elem)) for elem in self.digitize(state))
-        return np.max(self.Q[string_state])
+        return np.max(self.Q[self.digitize(state)])
     
     def update_policy(self, state, state_next, action, reward):
         state_value = self.evaluate_utility(state)
@@ -91,7 +102,7 @@ class DQN:
 
         state_value += ALPHA*(reward + GAMMA * reward_next - state_value)
 
-        state = ''.join(str(int(elem)) for elem in self.digitize(state))
+        state = self.digitize(state)
         self.Q[state][action] = state_value
 
 
@@ -102,7 +113,8 @@ class DQN:
                   "STDDEV:", round(np.std(value), 3), "Count:" , len(value))
     
 def play_episode(agent, epsilon=0.2, viz=False):
-    total_reward, timestep = [0, 0]
+    total_reward = 0
+    timestep = 0
     all_states = [env.reset(seed=451)]
     terminal = False
     all_actions = []
@@ -122,8 +134,11 @@ def play_episode(agent, epsilon=0.2, viz=False):
 
         total_reward += reward
 
-        if terminal and timestep < 200:
+        if terminal and timestep < TARGET_REWARD:
             reward = -300
+        
+        if reward > 300:
+            import pdb; pdb.set_trace()
         
         agent.update_policy(all_states[-1], state_next, action, reward)
         all_states.append(state_next)
@@ -162,13 +177,12 @@ def train(epochs=2000, agent=False):
 
         # Calculate the state values
         for idx, state in enumerate(ep_states):
-            state = ''.join(str(int(elem)) for elem in agent.digitize(state))
-            ep_states[idx] = state
+            ep_states[idx] = agent.digitize(state)
         digi_states.append(ep_states)
         all_actions.append(ep_acts)
 
         # End training early if max performance
-        if mu_rew >= 250:
+        if mu_rew >= TARGET_REWARD:
             break
     
     return digi_states, all_actions, total_reward, total_duration, agent
@@ -187,6 +201,8 @@ def plot_running_avg(reward_arr):
 
     for t in range(100, N):
         running_avg[t] = np.mean(reward_arr[t-100: t+1])
+        if running_avg[t] > 300:
+            import pdb; pdb.set_trace()
 
     plt.plot(running_avg, color="purple", label="Q-Learning Running Average")
     plt.xlabel('Training Time (episodes)', fontsize=18)
@@ -231,9 +247,10 @@ if __name__ == "__main__":
 
     labels = ["state", "action", "ep_reward", "ep_duration", "Agent"]
     info = dict(zip(labels, info))
-    save_stats(info, "StringQ")
-
     plot_running_avg(info['ep_reward'])
+    save_stats(info, "StringQ_rngBins")
+    
+    observe(info["Agent"], N=5)
     #plt.plot(random_rwds, color="gray", label="Random Moves Running Average")
 
     
