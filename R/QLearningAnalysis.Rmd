@@ -14,15 +14,34 @@ library(ggplot2)
 ```{r}
 Q_table <- read_csv("../../../StringQ_Qtable.csv")
 qStats <- read_csv("../../../StringQ_stats.csv")
+binQ_table = read_csv("../../../StringQ_rngBins_Qtable.csv")
+binqStats = read_csv("../../../StringQ_rngBins_stats.csv")
 #View(Q_table)
 #View(qStats)
 ```
+```{r}
+summary(binQ_table)
+sd(binQ_table$act0)
+sd(binQ_table$act1)
+binpos_states = as.data.frame(binQ_table %>% filter(act0 > 0 | act1 > 0))
+ggplot(binpos_states,aes(x=...1)) + 
+  geom_point(aes(y=act0, colour="act 0"), size=1) +
+  geom_point(aes(y=act1, colour="act 1"), size=1) +
+  labs(title="Positive States by Action value")
+ggplot(binQ_table,aes(x=...1)) + 
+  geom_point(aes(y=act0, colour="act 0"), size=1) +
+  geom_point(aes(y=act1, colour="act 1"), size=1) +
+  labs(title="All States by Action value")
+# graph is similar to when all states are included
+#plot(binqStats$timestep, factor(binqStats$state))
+```
+
 ```{r}
 summary(Q_table)
 ```
 ```{r}
 summary(qStats)
-plot(qStats$timestep, factor(qStats$state))
+#plot(qStats$timestep, factor(qStats$state))
 ```
 ```{r}
 updated_states = Q_table %>% filter(act0 != 0 | act1 != 0)
@@ -60,4 +79,5 @@ ggplot(pos_states, aes(x=...1, y=factor(argmax)) ) +
 hist(pos_states$act0) # xlim = c(0,200))
 hist(pos_states$act1)
 ```
+
 
