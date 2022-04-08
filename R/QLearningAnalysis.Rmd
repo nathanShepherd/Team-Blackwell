@@ -7,24 +7,57 @@ output: pdf_document
 
 ```{r setup, include=FALSE}
 library(readr)
+library(dplyr)
 library(ggplot2)
 ```
 
 ```{r}
-Q_table <- read_csv("../../../Q_table.csv")
+Q_table <- read_csv("../../../StringQ_Qtable.csv")
+qStats <- read_csv("../../../StringQ_stats.csv")
 #View(Q_table)
+#View(qStats)
 ```
 ```{r}
 summary(Q_table)
 ```
+```{r}
+summary(qStats)
+plot(qStats$timestep, factor(qStats$state))
+```
+```{r}
+updated_states = Q_table %>% filter(act0 != 0 | act1 != 0)
+updated_states = as.data.frame(updated_states)
+summary(updated_states)
+```
+```{r}
+pos_states = Q_table %>% filter(act0 > 0 | act1 > 0)
+summary(pos_states)
+```
 
 ```{r}
-#plot(Q_table$...1, Q_table$`0`)
-#plot(Q_table$...1, Q_table$`1`)
-ggplot(Q_table, aes(x=Q_table$...1)) + 
-  geom_point(aes(y=Q_table$`0`, colour="act 0")) +
-  geom_point(aes(y=Q_table$`1`, colour="act 1"))
-hist(Q_table$"0", xlim = c(0,200))
-hist(Q_table$"1", xlim = c(0,200))
+ggplot(Q_table, aes(x=...1)) + 
+  geom_point(aes(y=act0, colour="act 0")) +
+  geom_point(aes(y=act1, colour="act 1")) +
+  labs(title="All States by action value")
+
+ggplot(updated_states,aes(x=...1)) + 
+  geom_point(aes(y=act0, colour="act 0"), size=1) +
+  geom_point(aes(y=act1, colour="act 1"), size=1) +
+  labs(title="Updated States by Action value")
+
+ggplot(pos_states,aes(x=...1)) + 
+  geom_point(aes(y=act0, colour="act 0"), size=1) +
+  geom_point(aes(y=act1, colour="act 1"), size=1) +
+  labs(title="Positive States by Action value")
+
+
+ggplot(updated_states, aes(x=...1, y=factor(argmax)) ) + 
+  geom_point() + labs(title="Updated States by Best Action")
+
+ggplot(pos_states, aes(x=...1, y=factor(argmax)) ) + 
+  geom_point() + labs(title="Positive States by Best Action")
+
+hist(pos_states$act0) # xlim = c(0,200))
+hist(pos_states$act1)
 ```
 
