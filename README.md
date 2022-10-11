@@ -1,8 +1,6 @@
 # Team-Blackwell
 
-Research Paper [Bayesian Q-Learning](https://docs.google.com/document/d/1fBg6dA1Lb5Pfx8thPhe_PxG3CxMNApiReO5k6oAivTw/edit?usp=sharing)
-
-Presentation Slides [here](https://drive.google.com/file/d/1Tn7tMW2XYtup7TtXD3KR4jZRQ8M2yYrN/view?usp=sharing)
+Research Paper: [Bayesian Q-Learning](https://docs.google.com/document/d/1fBg6dA1Lb5Pfx8thPhe_PxG3CxMNApiReO5k6oAivTw/edit?usp=sharing), Presentation Slides [here](https://drive.google.com/file/d/1Tn7tMW2XYtup7TtXD3KR4jZRQ8M2yYrN/view?usp=sharing)
 
 This project aims to write a program that can balance a pole on a cart for 200 timesteps. This can be done using a simple Q-Learning Policy. We would like to improve the Q-Learning algorithm using methods from Bayesian Statistics.
 
