@@ -1,5 +1,9 @@
 # Team-Blackwell
 
+Research Paper [Bayesian Q-Learning](https://docs.google.com/document/d/1fBg6dA1Lb5Pfx8thPhe_PxG3CxMNApiReO5k6oAivTw/edit?usp=sharing)
+
+Presentation Slides [here](https://drive.google.com/file/d/1Tn7tMW2XYtup7TtXD3KR4jZRQ8M2yYrN/view?usp=sharing)
+
 This project aims to write a program that can balance a pole on a cart for 200 timesteps. This can be done using a simple Q-Learning Policy. We would like to improve the Q-Learning algorithm using methods from Bayesian Statistics.
 
 Our first goal is to predict the future roll-out of states in the OpenAI Gym Cartpole environment. These prediction may improve the performance of an autonomous agent using a Q-Learning Policy. The predictions may be handled by the Gibbs sampling method. This allows the agent to determine the conditional probability of observing a specific future state given the current state and action. Hence, the choice of which action to take next is more informed than the simple Q-Learning Policy.
